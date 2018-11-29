@@ -1,0 +1,7 @@
+"0","# Separation = {0, 1, ..., 6}"
+"0","point_sep_rad <- function(separation){"
+"0","  return(max_angle(separation) - min_angle(separation))"
+"0","}"
+"0","length_gl <- function(size, separation){"
+"0","  return(point_sep_rad(separation)*radius(size))"
+"0","}"

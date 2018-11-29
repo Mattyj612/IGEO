@@ -1,0 +1,8 @@
+"0","chord_length <- function(size, pull){"
+"0","  vector <- radius(size)*c(0, -1, 0) - back_point(size, pull)"
+"0","  return(Norm(vector))"
+"0","}"
+"0","height_al <-  function(size, pull){"
+"0","  length <- radius(size)^2 - chord_length(size, pull)^2"
+"0","  return(sign(pull)*sqrt(length))"
+"0","}"

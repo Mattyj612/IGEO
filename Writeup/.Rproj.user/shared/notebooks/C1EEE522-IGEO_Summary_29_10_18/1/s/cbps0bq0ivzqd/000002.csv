@@ -1,0 +1,4 @@
+"0","length_al <- function(size, separation, pull){"
+"0","  new_radius <- chord_length(size, pull)/2"
+"0","  return(new_radius*point_sep_rad(separation))"
+"0","}"

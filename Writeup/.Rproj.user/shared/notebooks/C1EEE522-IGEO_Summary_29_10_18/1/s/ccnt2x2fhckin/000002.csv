@@ -1,0 +1,34 @@
+"0","IGEO_data <- read_csv(""data/IGEO_data.csv"")"
+"2","Parsed with column specification:
+cols(
+  Subject.No. = col_integer(),
+  Version = col_integer(),
+  order = col_integer(),
+  image = col_character(),
+  Surface = col_character(),
+  Planar.Straight = col_character(),
+  Spherical.Straight = col_character(),
+  Size = col_double(),
+  `pointDistance (radians)` = col_double(),
+  `pointDistance (degrees)` = col_double(),
+  Line.Length = col_double(),
+  Pull = col_double(),
+  `rotation (degrees)` = col_double(),
+  Response = col_integer(),
+  rt = col_double()
+)
+"
+"0","colnames(IGEO_data) <- c(""subject_no"", ""version"", ""order"", ""image"", ""surface"","
+"0","  ""planar"", ""spherical"", ""size"", ""point_sep_rad"", ""point_distance_deg"","
+"0","  ""line_length"", ""rotation_angle"", ""rotation_deg"", ""response"", ""response_time"")"
+"0","IGEO_data %<>% mutate_at("
+"0","  .vars = c(""subject_no"", ""version"", ""order"", ""surface"","
+"0","  ""planar"", ""spherical"", ""response""), "
+"0","  .funs = factor"
+"0","  ) %>% "
+"0","  mutate(response = factor("
+"0","    x = response, "
+"0","    levels = c(0, 1),"
+"0","    labels = c(""incorrect"", ""correct""))) %>% "
+"0","  select(-point_distance_deg, -rotation_deg) %>% "
+"0","  arrange(surface, desc(planar), desc(spherical))"

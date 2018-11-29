@@ -1,0 +1,8 @@
+"0","# Compute contrasts"
+"0","contrast("
+"0","  object = model_1_predicted, "
+"0","  by = c(""surface""), "
+"0","  method = ""pairwise"", "
+"0","  adjust = ""holm"""
+"0","  ) %>% "
+"0","  clean_IGEO_contrasts()"

@@ -1,0 +1,3 @@
+"0","length_gc <- function(size, separation){"
+"0","  return(point_sep_rad(separation)*radius(size))"
+"0","}"

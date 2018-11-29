@@ -1,0 +1,11 @@
+"0","# Break results down by category"
+"0","IGEO_descriptives <- IGEO_data %>% "
+"0","  mutate(response = as.numeric(response) - 1) %>% "
+"0","  group_by(surface, spherical, planar) %>% "
+"0","  summarise(percentage_correct = mean(response)) %>% "
+"0","  mutate(condition = sprintf(""%s_%s_%s"", surface, spherical, planar)) %>% "
+"0","  select(everything()) %>% "
+"0","  ungroup() %>% "
+"0","  arrange(surface, desc(planar), desc(spherical))"
+"2","Error in eval(lhs, parent, parent) : object 'IGEO_data' not found
+"

@@ -1,0 +1,6 @@
+"0","# Spin = {0, 1.7}"
+"0","height_ac <- function(size, separation, pull, spin){"
+"0","  rotated <- rot_matrix(size, separation, pull, spin) %*% "
+"0","    left_point(size, separation)"
+"0","  return(rotated[3])"
+"0","}"

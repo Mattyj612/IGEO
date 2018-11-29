@@ -1,0 +1,7 @@
+"0","# Size = {0, 1, 2, 3}"
+"0","# Pull = {-5, ..., -1, 1, ... 5}"
+"0","back_point <- function(size, pull){"
+"0","  back_y <- cos(pull*pi/15)"
+"0","  back_z <- -sin(pull*pi/15)"
+"0","  return(radius(size)*c(0, back_y, back_z))"
+"0","}"

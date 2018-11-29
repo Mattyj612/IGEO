@@ -1,0 +1,7 @@
+"0","# Separation = {0, 1, ...., 6}"
+"0","min_angle <- function(separation) {"
+"0","  return(-pi/2 - (pi/18)*6^(separation/6))"
+"0","}"
+"0","max_angle <- function(separation) {"
+"0","  return(-pi/2 + (pi/18)*6^(separation/6))"
+"0","}"

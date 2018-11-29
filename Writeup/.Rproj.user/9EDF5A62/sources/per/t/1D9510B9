@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1541552793963.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "348335896",
+    "id" : "1D9510B9",
+    "lastKnownWriteTime" : 1541549696,
+    "last_content_update" : 1541549696,
+    "path" : "~/Documents/IGEO/Writeup/kid_analysis_5_11_18.Rmd",
+    "project_path" : "kid_analysis_5_11_18.Rmd",
+    "properties" : {
+        "cursorPosition" : "379,0",
+        "last_setup_crc32" : "",
+        "scrollLine" : "362"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

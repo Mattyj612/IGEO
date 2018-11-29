@@ -1,0 +1,625 @@
+---
+title: "Kid_IGEO_Analysis"
+author: "Matthew Jordan"
+date: '2018-10-31'
+output:
+  html_document:
+    toc: true
+    number_sections: true
+---
+
+\tableofcontents
+
+# Preprocessing 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+
+packages <- c("tidyverse", "magrittr", "knitr", "broom", "ggsignif", "lme4",
+  "effects", "devtools", "gtools", "ggthemes", "emmeans", "ggsignif",
+  "pracma", "reghelper", "Directional")
+
+install <- function(package){
+  is_installed <- package %in% installed.packages()
+  if (!is_installed) {
+    install.packages(package, repos = "http://cran.us.r-project.org",
+      dependencies = TRUE, quiet = TRUE)
+  }
+  sapply(package, require, character.only = TRUE)
+}
+
+suppressWarnings(invisible(lapply(packages, install)))
+
+source("code/all_IGEO_specifications.R")
+source("code/IGEO_Summary_Helper.R")
+```
+
+Read in the data and edit it suitably.
+
+```{r read_data}
+kid_data <- list.files("data/Kid_IGEO_Results") %>% 
+  str_c("data/Kid_IGEO_Results/", .) %>% 
+  map_dfr(
+    .x = .,
+    .f = read_csv,
+    col_types = cols()
+  ) %>% 
+  set_names(
+    x = .,
+    nm = c("image", "trial", "correct_ans", "condition", "random",
+      "given_ans", "response", "reaction_time", "subject_no")
+  ) %>% 
+  mutate(
+    spherical = str_sub(condition, 1, 3),
+    planar = str_extract(condition, "curve|line"),
+    surface = str_extract(condition, "sphere|plane")
+  ) %>% 
+  mutate_at(
+    .vars = c("subject_no", "response", "spherical",
+      "planar", "surface", "correct_ans", "given_ans"), 
+    .funs = factor
+  ) %>% 
+  mutate(
+    response = factor(response, labels = c("incorrect", "correct"))
+    ) %>% 
+  select(subject_no, trial, image, surface, planar, spherical, response,
+    reaction_time, correct_ans, given_ans) %>% 
+  arrange(surface, desc(planar), desc(spherical))
+
+
+# Get the info about size, separation, pull, spin
+kid_data %<>% 
+  mutate(image_stripped = str_remove_all(image,
+    "gPlane_|Plane_|Sphere_|gSphere_|_.jpg")) %>% 
+  separate(
+    col = image_stripped,
+    into = c("size", "separation", "pull", "spin"),
+    sep = "_",
+    remove = TRUE
+  ) %>% 
+  mutate(pull = str_replace(pull, fixed("(Neg)"), "-")) %>% 
+  mutate_at(
+    .vars = c("size", "separation", "pull", "spin"),
+    .funs = as.numeric
+  )
+
+# Load into the data the specifics about the height, 
+# line length, rotation angle, etc.
+kid_data %<>% 
+  mutate(
+    pull = replace_na(pull, 0),
+    point_sep_rad = point_sep_rad(separation),
+    rotation_angle = case_when(
+      planar == "line" & spherical == "arc" ~ 0,
+      TRUE ~ pmap(
+        .l = list(size, separation, pull, spin),
+        .f = rot_angle
+      ) %>% unlist()
+    ),
+    height = by_case(
+      col_1 = planar, col_2 = spherical,
+      gl = 0,
+      gc = pmap(.l = list(size, separation, pull), .f = height_gc) %>% unlist(),
+      al = map2(.x = size, .y = pull, .f = height_al) %>% unlist(),
+      ac = pmap(.l = list(size, separation, pull, spin), .f = height_ac) %>% unlist()
+    ),
+    height = abs(height)/radius(size),
+    line_length = by_case(
+      col_1 = planar, col_2 = spherical,
+      gl = map2(.x = size, .y = separation, .f = length_gl) %>% unlist(),
+      gc = map2(.x = size, .y = separation, .f = length_gc) %>% unlist(),
+      al = pmap(.l = list(size, separation, pull), .f = length_al) %>% unlist(),
+      ac = pmap(.l = list(size, separation, pull), .f = length_ac) %>% unlist()
+    ),
+    curvature = by_case(
+      col_1 = planar, col_2 = spherical,
+      gl = 0,
+      gc = pmap(.l = list(size, separation, pull), .f = curvature_gc) %>% unlist(),
+      al = 0,
+      ac = pmap(.l = list(size, separation, pull, spin), .f = curvature_ac) %>% unlist()
+    )
+  ) %>% 
+  filter(!is.na(response)) %>% 
+  select(everything(), response, reaction_time)
+
+write_csv(x = kid_data, path = "data/kid_data.csv")
+```
+
+# Descriptives 
+
+Get the overall correct vs. incorrect proportion.
+
+```{r overall_correct}
+num_trials <- kid_data %>% nrow()
+
+# Get the overall correct proportion
+all_trials <- kid_data %>% 
+  group_by(response) %>% 
+  summarise(
+    count = n(),
+    percentage = str_c(100*round(count/(num_trials), 3), "%")
+  )
+
+# Summarize
+all_trials %>%
+  kable(.)
+```
+
+We see that 67.5% of all responses are correct. Let's break this down by category.
+
+```{r split}
+# Break results down by category
+kid_descriptives <- kid_data %>% 
+  mutate(response = as.numeric(response) - 1) %>% 
+  group_by(surface, spherical, planar) %>% 
+  summarise(percentage_correct = mean(response)) %>% 
+  mutate(condition = sprintf("%s_%s_%s", surface, spherical, planar)) %>% 
+  select(everything()) %>% 
+  ungroup() %>% 
+  arrange(surface, desc(planar), desc(spherical))
+
+# Summarize
+kid_descriptives %>% 
+  select(condition, percentage_correct) %>%
+  kable(.)
+```
+
+Let's plot these descriptives. Notice right away the performance on the arc line condition for spheres: only 3% of responses were correct.
+
+```{r descriptives_plot, fig.align="center"}
+my_labs <- function(){
+  labs(
+    x = "Surface",
+    y = "Proportion Correct",
+    fill = " ",
+    title = "Descriptives"
+  )
+}
+
+kid_descriptives %>% 
+  mutate(
+    condition = sprintf("%s %s", str_to_title(spherical), str_to_title(planar)),
+    condition = factor(condition, levels = unique(condition))
+    ) %>% 
+  ggplot(data = .,
+    aes(x = str_to_title(surface), y = percentage_correct, fill = condition)) +
+  geom_bar(position = position_dodge(width = NULL), stat = "identity") +
+  my_labs() + IGEO_theme() + IGEO_fill()
+```
+
+# Analysis
+
+## Above Chance
+
+```{r above_chance}
+# All trials together
+model_above_chance <- kid_data %>% 
+  glmer(
+    data = .,
+    response ~ (1 | subject_no),
+    family = binomial(link = "logit")
+    )
+
+# Take a look
+model_above_chance %>%
+  tidy() %>% 
+  filter(term == "(Intercept)") %>% 
+  mutate(term = "Intercept") %>% 
+  mutate(
+    p_value = "0.0000",
+    p_value_clean = clean_p_val(p.value),
+    p_value_star = stars.pval(p.value)
+  ) %>% 
+  rename(
+    "std_error" = std.error,
+    "log_odds" = estimate
+    ) %>% 
+  select(-p.value, -group) %>% 
+  kable(.)
+```
+
+Overall, performance is above chance. $$\frac{1}{1+\exp{(-0.739)}} = 67.7\%.$$
+We now break up by category.
+
+```{r above_chance_split}
+# Split up by category
+model_above_chance_split <- kid_data %>% 
+  group_by(surface, spherical, planar) %>% 
+  do(
+    above_chance = glmer(
+      data = .,
+      response ~ (1 | subject_no),
+      family = binomial(link = "logit")
+      )
+    )
+
+# Look at results
+model_above_chance_split %>% 
+  tidy(above_chance, conf.int = TRUE) %>% 
+  ungroup() %>% 
+  filter(term == "(Intercept)") %>% 
+  mutate(
+    p_value = round(p.value, 4),
+    p_value_clean = clean_p_val(p.value),
+    p_value_star = gtools::stars.pval(p_value),
+    condition = sprintf("%s_%s_%s", surface, spherical, planar)
+  ) %>% 
+  arrange(surface, desc(planar), desc(spherical)) %>% 
+  mutate(probability = 1/(1 + exp(-estimate))) %>% 
+  rename(
+    "std_error" = std.error,
+    "log_odds" = estimate,
+    "conf_lower" = conf.low,
+    "conf_upper" = conf.high
+    ) %>% 
+  select(condition, everything(), -term, -surface, -planar, 
+    -spherical, -group, -p.value) %>% 
+  kable(.)
+```
+
+Performance was significantly different from chance except in two cases:
+geodesic curves on planes and arc curves on spheres. Interestingly, the arc curves
+on planes were significant. Unusual since on the plane, curves are curves, regardless of
+geo vs. arc.
+
+## Model 1
+
+### Run The Model 
+
+```{r model_1}
+model_1 <- glmer(
+  data = kid_data,
+  formula = response ~ surface * planar * spherical + (1 + surface + planar | subject_no),
+  family = binomial(link = "logit")
+  )
+
+# Show the results
+clean_IGEO_model(
+  model = model_1,
+  col_names = c("Intercept", "Surface", "Planar", "Spherical",
+    "Surface x Planar", "Surface x Spherical", "Planar x Spherical",
+    "Surface x Planar x Spherical")
+)
+```
+
+All significant except for `Planar x Spherical`. These two terms only interact in the presence
+of the `Surface` term.
+
+### Marginal Means
+
+```{r model_1_predicted}
+# Estimated Marginal Means
+model_1_predicted <- emmeans(
+  object = model_1, 
+  specs = ~ surface * planar * spherical , 
+  type = "response"
+  )
+
+model_1_predicted_clean <- clean_IGEO_emmeans(model_1_predicted)
+
+model_1_predicted_clean %>% 
+  kable()
+```
+
+Here is a plot of these model predictions.
+
+<details>
+<summary>Model 1 plot code</summary>
+```{r plot_model_1_code}
+my_labs <- function(){
+  labs(
+    x = "Surface",
+    y = "Predicted Proportion Correct",
+    fill = " ",
+    title = "Model 1 Predictions"
+  )
+}
+
+model_1_plot <- model_1_predicted_clean %>% 
+   mutate(
+      condition = sprintf("%s %s", str_to_title(spherical), str_to_title(planar)),
+      condition = factor(condition, levels = unique(condition))
+    ) %>%   
+  ggplot(data = ., aes(x = str_to_title(surface), y = probability, fill = condition)) +
+  geom_bar(position = position_dodge(width = NULL), stat = "identity") +
+  geom_errorbar(aes(ymin = conf_lower, ymax = conf_upper), 
+    position = position_dodge(0.9), width = 0.2, size = 0.4) +
+  my_labs() + IGEO_theme() + IGEO_fill()
+```
+</details>
+
+```{r plot_model_1, fig.align = "center"}
+model_1_plot
+```
+
+This plot looks a great deal like the graph of the descriptives for each, but
+it was generated by an explanatory model which we can use to better understand 
+these data. 
+
+### Contrasts
+
+```{r model_1_contrasts}
+# Compute contrasts
+contrast(
+  object = model_1_predicted, 
+  by = c("surface"), 
+  method = "pairwise", 
+  adjust = "holm"
+  ) %>% 
+  clean_IGEO_contrasts()
+```
+
+Note that kids perform significantly better for arc curves on planes than they do
+for geo curves on planes. This is unexpected, since on planes, the arc vs. geo
+distinction is meaningless, and all of these stimuli simply appear as curves.
+
+```{r curvature_analysis}
+arc_curve_data <- kid_data %>% 
+  filter(planar == "curve", spherical == "arc") %>% 
+  select(curvature) %>% 
+  arrange(curvature) %>% 
+  unique() %>% 
+  pull()
+
+geo_curve_data <- kid_data %>% 
+  filter(planar == "curve", spherical == "geo") %>% 
+  select(curvature) %>% 
+  arrange(curvature) %>% 
+  unique() %>% 
+  pull()
+
+tibble(
+  arc_curve = arc_curve_data,
+  geo_curve = geo_curve_data
+  ) %>% 
+  kable(.)
+```
+
+```{r curvature_data}
+kid_data %>% 
+  filter(planar == "curve") %>% 
+  group_by(spherical) %>% 
+  summarize(
+    mean_curvature = round(100*mean(curvature), 3),
+    max_curvature = round(100*max(curvature), 3),
+    min_curvature = round(100*min(curvature), 3),
+    sd_curvature = round(100*sd(curvature), 3)
+  ) %>% 
+  kable(.)
+
+```
+
+
+## Model 1b
+
+```{r 90_yes}
+kid_data %>% 
+  group_by(subject_no) %>% 
+  summarise(
+    percentage_yes = mean(given_ans == "y")
+  ) %>% 
+  arrange(desc(percentage_yes)) %>% 
+  head() %>% 
+  kable()
+```
+
+```{r model_1b}
+model_1b <- kid_data %>% 
+  filter(surface == "sphere") %>% 
+  glmer(
+    data = .,
+    formula = given_ans ~ planar * spherical + (1 + planar | subject_no),
+    family = binomial(link = "logit")
+    )
+
+# Show the results
+clean_IGEO_model(
+  model = model_1b,
+  col_names =  c("Intercept", "Planar", "Spherical", "Planar x Spherical")
+  )
+```
+
+### Marginal Means
+
+```{r model_1b_predicted}
+# Estimated Marginal Means
+model_1b_predicted <- emmeans(
+    object = model_1b,
+    specs = ~ planar * spherical , 
+    type = "response"
+  )
+
+model_1b_predicted_clean <- model_1b_predicted %>% 
+  tidy() %>% 
+  select(-df) %>% 
+  rename(
+    "std_error" = std.error,
+    "probability" = prob
+    ) %>% 
+  mutate(
+    conf_lower = probability - 1.96*std_error,
+    conf_upper = probability + 1.96*std_error
+  ) %>% 
+  arrange(desc(planar), desc(spherical)) %>% 
+  mutate(surface = "sphere") %>% 
+  select(surface, everything(), -asymp.LCL, -asymp.UCL)
+
+model_1b_predicted_clean %>% 
+  kable()
+```
+
+Finally, we plot this model's predictions.
+
+<details>
+<summary>Model 1b Plot Code</summary>
+```{r plot_model_1b_code}
+my_labs <- function(){
+  labs(
+    x = "Condition",
+    y = "Predicted Proportion of\n \"Yes\" Responses",
+    fill = " ",
+    title = "Model 1b Predictions"
+  )
+}
+
+
+model_1b_graph <- model_1b_predicted_clean %>% 
+  mutate(
+    condition = sprintf("%s %s", str_to_title(spherical), str_to_title(planar)),
+    condition = factor(condition, levels = unique(condition))
+    ) %>% 
+  ggplot(data = .,
+    aes(x = condition, y = probability, fill = condition)) +
+  geom_bar(position = position_dodge(width = NULL), stat = "identity") +
+  geom_errorbar(aes(ymin = conf_lower, ymax = conf_upper), 
+    position = position_dodge(0.9), width = 0.2, size = 0.4) +
+  my_labs() + IGEO_theme() + IGEO_fill() + 
+  guides(fill = FALSE)
+```
+</details>
+
+```{r plot_model_1b, fig.align = "center"}
+model_1b_graph
+```
+
+
+```{r model_1b_contrasts}
+# Compute contrasts
+contrast(
+  object = model_1b_predicted, 
+  method = "pairwise",
+  by = c("planar"),
+  adjust = "holm"
+  ) %>% 
+  tidy() %>% 
+  mutate(
+    p_value = round(p.value, 4),
+    p_value_clean = clean_p_val(p.value),
+    p_value_star = stars.pval(p.value)
+    ) %>% 
+  rename(
+    "odds_ratio" = odds.ratio,
+    "std_error" = std.error
+    ) %>%
+  select(planar, everything(), -p.value, -z.ratio, -df) %>% 
+  kable()
+```
+
+### Exploratory Analysis
+
+Analyzing just curves.
+
+```{r exploratory}
+curves_yes <- kid_data %>% 
+  filter(planar == "curve") %>% 
+  glm(
+    data = .,
+    formula = given_ans ~ surface * spherical,
+    family = binomial(link = "logit")
+    )
+
+# Show the results
+curves_yes %>% 
+  tidy(conf.int = TRUE) %>%
+  mutate(
+    p_value = round(p.value, 4),
+    p_value_clean = clean_p_val(p.value),
+    p_value_star = stars.pval(p.value)
+  ) %>% 
+  select(-p.value) %>% 
+  mutate(
+    term =c("Intercept", "Surface", "Spherical", "Surface x Spherical")
+  ) %>% 
+  rename(
+    "conf_lower" = conf.low,
+    "conf_upper" = conf.high,
+    "std_error" = std.error,
+    "log_odds" = estimate
+  ) %>% 
+  kable(.)
+```
+
+Get the emmeans for this `surface x spherical` model.
+```{r curves_yes_emmeans}
+# Estimated Marginal Means
+curves_yes_predicted <- emmeans(
+    object = curves_yes,
+    specs = ~ surface * spherical , 
+    type = "response"
+  )
+
+curves_yes_predicted_clean <- curves_yes_predicted %>% 
+  tidy() %>% 
+  select(-df) %>% 
+  rename(
+    "std_error" = std.error,
+    "probability" = prob
+    ) %>% 
+  mutate(
+    conf_lower = probability - 1.96*std_error,
+    conf_upper = probability + 1.96*std_error
+  ) %>% 
+  arrange(surface, desc(spherical)) %>% 
+  select(surface, everything(), -asymp.LCL, -asymp.UCL)
+
+curves_yes_predicted_clean %>% 
+  kable(.)
+```
+
+```{r curves_yes_contrasts}
+contrast(
+  object = curves_yes_predicted, 
+  method = "pairwise",
+  adjust = "holm"
+  ) %>% 
+  tidy() %>% 
+  mutate(
+    p_value = round(p.value, 4),
+    p_value_clean = clean_p_val(p.value),
+    p_value_star = stars.pval(p.value)
+    ) %>% 
+  rename(
+    "odds_ratio" = odds.ratio,
+    "std_error" = std.error
+    ) %>%
+  select(everything(), -p.value, -z.ratio, -df) %>% 
+  kable(.)
+```
+
+Look at the effect of curvature on the planar arc curves and geo curves.
+
+```{r}
+model_2_curvature <- kid_data %>% 
+  filter(surface == "plane", planar == "curve") %>% 
+  glmer(
+    data = .,
+    formula = response ~ line_length + spherical*curvature + (1 | subject_no),
+    family = binomial(link = "logit")
+    )
+
+model_2_curvature %>% 
+  tidy(conf.int = TRUE) %>%
+  filter(group == "fixed") %>% 
+  mutate(
+    p_value = round(p.value, 4),
+    p_value_clean = clean_p_val(p.value),
+    p_value_star = stars.pval(p.value)
+  ) %>% 
+  select(-p.value, -group) %>% 
+  mutate(
+    term =c("Intercept", "Line Length", "Spherical", "Curvature", "Spherical x Curvature")
+  ) %>% 
+  rename(
+    "conf_lower" = conf.low,
+    "conf_upper" = conf.high,
+    "std_error" = std.error,
+    "log_odds" = estimate
+  ) %>% 
+  kable(.)
+```
+
+Huge effect of curvature!

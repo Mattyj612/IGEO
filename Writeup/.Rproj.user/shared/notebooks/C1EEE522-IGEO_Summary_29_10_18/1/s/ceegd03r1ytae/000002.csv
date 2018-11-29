@@ -1,0 +1,11 @@
+"0","model_1b <- IGEO_data %>% 
+  filter(surface == ""sphere"") %>% 
+  glmer(
+    data = .,
+    formula = given_ans ~ planar * spherical + (1 + planar | subject_no),
+    family = binomial(link = ""logit""),
+    glmerControl(optimizer = ""optimx"", optCtrl = list(method = ""nlminb""))
+  )
+"
+"2","Error in eval(predvars, data, env) : object 'given_ans' not found
+"
