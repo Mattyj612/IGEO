@@ -1,0 +1,1366 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     56712,       1358]
+NotebookOptionsPosition[     55744,       1334]
+NotebookOutlinePosition[     56103,       1350]
+CellTagsIndexPosition[     56060,       1347]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"GeoCurve", "[", 
+   RowBox[{"Separation_", ",", " ", "Height_"}], "]"}], ":=", 
+  "\[IndentingNewLine]", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+     "GenerateSphere", ",", " ", "MinAngle", ",", " ", "MaxAngle", ",", " ", 
+      "ArcLength", ",", " ", "LeftPt", ",", " ", "RightPt", ",", " ", 
+      RowBox[{"Radius", " ", "=", "3.5"}], ",", " ", "HeightList", ",", " ", 
+      "UnitHeight", ",", " ", "NewRadius", ",", " ", "XSeparation", ",", " ", 
+      "RotationAngle", ",", " ", "Turn", ",", " ", "XCord", ",", " ", "Perp1",
+       ",", " ", "Perp2", ",", " ", "Temp", ",", " ", "EndAngle", ",", " ", 
+      "ViewAngle"}], "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"HeightList", " ", "=", " ", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"-", "1"}], "/", 
+         RowBox[{"Sqrt", "[", "2", "]"}]}], ",", 
+        RowBox[{
+         RowBox[{"-", "1"}], "/", "2"}], ",", " ", 
+        RowBox[{
+         RowBox[{"-", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"Sqrt", "[", "6", "]"}], "-", 
+            RowBox[{"Sqrt", "[", "2", "]"}]}], ")"}]}], "/", "4"}], ",", " ", 
+        
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"Sqrt", "[", "6", "]"}], "-", 
+           RowBox[{"Sqrt", "[", "2", "]"}]}], ")"}], "/", "4"}], ",", " ", 
+        RowBox[{"1", "/", "2"}], ",", " ", 
+        RowBox[{"1", "/", 
+         RowBox[{"Sqrt", "[", "2", "]"}]}]}], "}"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"ViewAngle", " ", "=", " ", 
+      RowBox[{"{", 
+       RowBox[{"0.108", ",", " ", "0.073", ",", " ", "0.038", ",", " ", 
+        RowBox[{"-", "0.038"}], ",", " ", 
+        RowBox[{"-", "0.073"}], ",", " ", 
+        RowBox[{"-", "0.108"}]}], "}"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"UnitHeight", " ", "=", " ", 
+      RowBox[{"HeightList", "[", 
+       RowBox[{"[", "Height", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"XSeparation", " ", "=", " ", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"1", "/", "10"}], ")"}], "*", 
+        RowBox[{"(", 
+         RowBox[{"Separation", " ", "+", " ", "1"}], ")"}]}], ")"}]}], ";", 
+     " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+      "Goes", " ", "from", " ", "0.2", " ", "to", " ", "0.6", " ", "in", " ", 
+       "equal", " ", "step", " ", "increments"}], " ", "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{"(*", 
+      RowBox[{
+       RowBox[{"NewRadius", " ", "=", " ", 
+        RowBox[{"Radius", "*", 
+         RowBox[{"Sqrt", "[", 
+          RowBox[{"1", "-", 
+           RowBox[{"UnitHeight", "^", "2"}]}], "]"}]}]}], ";"}], "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{"LeftPt", " ", "=", " ", 
+      RowBox[{"Radius", "*", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "XSeparation"}], ",", 
+         RowBox[{"-", 
+          RowBox[{"Sqrt", "[", 
+           RowBox[{"1", "-", 
+            RowBox[{"XSeparation", "^", "2"}], "-", 
+            RowBox[{"UnitHeight", "^", "2"}]}], "]"}]}], ",", " ", 
+         "UnitHeight"}], "}"}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"RightPt", " ", "=", " ", 
+      RowBox[{"Radius", "*", 
+       RowBox[{"{", 
+        RowBox[{"XSeparation", ",", 
+         RowBox[{"-", 
+          RowBox[{"Sqrt", "[", 
+           RowBox[{"1", "-", 
+            RowBox[{"XSeparation", "^", "2"}], "-", 
+            RowBox[{"UnitHeight", "^", "2"}]}], "]"}]}], ",", " ", 
+         "UnitHeight"}], "}"}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"Perp1", " ", "=", " ", "LeftPt"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"Temp", " ", "=", " ", "RightPt"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"Perp2", " ", "=", " ", 
+      RowBox[{
+       RowBox[{"Norm", "[", "Perp1", "]"}], "*", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"Perp1", " ", "\[Cross]", "Temp"}], ")"}], "\[Cross]", 
+          "Perp1"}], "/", 
+         RowBox[{"Norm", "[", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"Perp1", " ", "\[Cross]", "Temp"}], ")"}], "\[Cross]", 
+           "Perp1"}], "]"}]}], ")"}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"EndAngle", " ", "=", " ", 
+      RowBox[{"ArcCos", "[", 
+       RowBox[{
+        RowBox[{"Perp1", ".", "Temp"}], "/", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"Norm", "[", "Perp1", "]"}], "*", 
+          RowBox[{"Norm", "[", "Temp", "]"}]}], ")"}]}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"RotationAngle", " ", "=", " ", 
+      RowBox[{"ViewAngle", "[", 
+       RowBox[{"[", "Height", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"Turn", " ", "=", " ", 
+      RowBox[{"RotationTransform", "[", 
+       RowBox[{
+        RowBox[{"-", "RotationAngle"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"1", ",", " ", "0", ",", " ", "0"}], "}"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", " ", "0", ",", " ", "0"}], "}"}]}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"GenerateSphere", " ", "=", " ", 
+      RowBox[{"Graphics3D", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"GrayLevel", "[", "1", "]"}], ",", 
+          RowBox[{"Specularity", "[", 
+           RowBox[{"White", ",", "50"}], "]"}], ",", " ", 
+          RowBox[{"Sphere", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"0", ",", " ", "0", ",", "0"}], "}"}], ",", " ", 
+            "Radius"}], "]"}]}], "}"}], ",", " ", "\[IndentingNewLine]", 
+        RowBox[{"ImageSize", "\[Rule]", " ", "650"}], ",", " ", 
+        RowBox[{"Boxed", "\[Rule]", " ", "False"}], ",", " ", 
+        RowBox[{"Background", "\[Rule]", " ", 
+         RowBox[{"Lighter", "[", 
+          RowBox[{"Gray", ",", " ", "0.5"}], "]"}]}], ",", " ", 
+        RowBox[{"ViewPoint", " ", "->", " ", 
+         RowBox[{"{", 
+          RowBox[{"0", ",", " ", 
+           RowBox[{"-", "2"}], ",", " ", "0"}], "}"}]}], ",", " ", 
+        "\[IndentingNewLine]", 
+        RowBox[{"PlotRange", "\[Rule]", " ", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", "4.2"}], ",", " ", "4.2"}], "}"}], ",", " ", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", "6"}], ",", " ", "6"}], "}"}], ",", " ", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", "6"}], ",", " ", "6"}], "}"}]}], "}"}]}], ",", " ", 
+        
+        RowBox[{"Lighting", "\[Rule]", " ", "\"\<Neutral\>\""}]}], "]"}]}], 
+     ";", "\[IndentingNewLine]", 
+     RowBox[{"Show", "[", 
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{"GenerateSphere", ",", "\[IndentingNewLine]", 
+        RowBox[{"Graphics3D", "[", 
+         RowBox[{"{", 
+          RowBox[{"Purple", ",", " ", 
+           RowBox[{"Rotate", "[", 
+            RowBox[{
+             RowBox[{"Sphere", "[", 
+              RowBox[{"LeftPt", ",", " ", "0.06"}], "]"}], ",", " ", 
+             "RotationAngle", ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "1"}], ",", " ", "0", ",", " ", "0"}], "}"}]}], 
+            "]"}]}], "}"}], "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"Graphics3D", "[", 
+         RowBox[{"{", 
+          RowBox[{"Orange", ",", " ", 
+           RowBox[{"Rotate", "[", 
+            RowBox[{
+             RowBox[{"Sphere", "[", 
+              RowBox[{"RightPt", ",", "0.06"}], "]"}], ",", "RotationAngle", 
+             ",", " ", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "1"}], ",", " ", "0", ",", " ", "0"}], "}"}]}], 
+            "]"}]}], "}"}], "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"ParametricPlot3D", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"Turn", "[", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"Perp1", "*", 
+               RowBox[{"Cos", "[", "u", "]"}]}], " ", "+", " ", 
+              RowBox[{"Perp2", "*", 
+               RowBox[{"Sin", "[", "u", "]"}]}]}], "}"}], "]"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"u", ",", " ", "0", ",", "EndAngle"}], "}"}], ",", " ", 
+          RowBox[{"PlotStyle", "\[Rule]", " ", 
+           RowBox[{"{", 
+            RowBox[{"Black", ",", 
+             RowBox[{"Thickness", "[", "0.0055", "]"}]}], "}"}]}]}], "]"}]}], 
+       "\[IndentingNewLine]", "}"}], "]"}]}]}], "\[IndentingNewLine]", 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "SetDirectory", "[", 
+   "\"\</Users/matthewjordan/Documents/IGEO/Updated_Kid_IGEO/stimuli/geo_\
+curve/\>\"", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Do", "[", 
+   RowBox[{
+    RowBox[{"Export", "[", 
+     RowBox[{
+      RowBox[{"\"\<GeoCurve_Sphere_Sep\>\"", " ", "<>", " ", 
+       RowBox[{"ToString", "[", "i", "]"}], " ", "<>", " ", "\"\<_Ht\>\"", 
+       " ", "<>", " ", 
+       RowBox[{"ToString", "[", "j", "]"}], " ", "<>", " ", "\"\<.x3d\>\""}], 
+      ",", " ", 
+      RowBox[{"GeoCurve", "[", 
+       RowBox[{"i", ",", " ", "j"}], "]"}]}], "]"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"i", ",", " ", "1", ",", " ", "5"}], "}"}], ",", " ", 
+    RowBox[{"{", 
+     RowBox[{"j", ",", " ", "1", ",", " ", "6"}], "}"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Do", "[", 
+   RowBox[{
+    RowBox[{"Export", "[", 
+     RowBox[{
+      RowBox[{"\"\<GeoCurve_Sphere_Sep\>\"", " ", "<>", " ", 
+       RowBox[{"ToString", "[", "i", "]"}], " ", "<>", " ", "\"\<_Ht\>\"", 
+       " ", "<>", " ", 
+       RowBox[{"ToString", "[", "j", "]"}], " ", "<>", " ", "\"\<.jpg\>\""}], 
+      ",", " ", 
+      RowBox[{"GeoCurve", "[", 
+       RowBox[{"i", ",", " ", "j"}], "]"}], ",", " ", 
+      RowBox[{"ImageResolution", "\[Rule]", " ", "350"}]}], "]"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"i", ",", " ", "1", ",", " ", "5"}], "}"}], ",", " ", 
+    RowBox[{"{", 
+     RowBox[{"j", ",", " ", "1", ",", " ", "6"}], "}"}]}], "]"}], 
+  ";"}]}], "Input",
+ CellChangeTimes->{{3.752415379183395*^9, 3.752415388339735*^9}, {
+   3.752415557371758*^9, 3.752415617204665*^9}, 3.752415705819985*^9, {
+   3.752415770230501*^9, 3.752415805689871*^9}, {3.752415839992239*^9, 
+   3.752415982323402*^9}, 3.7524167822070103`*^9, {3.752417711412697*^9, 
+   3.7524177198530073`*^9}, {3.752418201104704*^9, 3.752418206578704*^9}, 
+   3.752418334857082*^9, 3.75241839434781*^9, {3.7524953075914593`*^9, 
+   3.752495309796174*^9}, {3.752496527339829*^9, 3.752496534789094*^9}, {
+   3.752508429407799*^9, 3.752508498558106*^9}, {3.7525088546715527`*^9, 
+   3.752508856069008*^9}, {3.7525098237646103`*^9, 3.7525098254119387`*^9}, {
+   3.753524491443576*^9, 3.753524495799593*^9}, {3.753524787953635*^9, 
+   3.753524844887515*^9}, 3.7535252974496593`*^9, {3.753525607661393*^9, 
+   3.7535256343053637`*^9}, {3.753525685761477*^9, 3.7535256883738317`*^9}, {
+   3.753526206258793*^9, 3.753526221199703*^9}, {3.753526307384406*^9, 
+   3.753526367430855*^9}, 
+   3.753527097376462*^9},ExpressionUUID->"3d4830b2-83ee-4840-949a-\
+389cc383e1f8"],
+
+Cell[BoxData["\<\"/Users/matthewjordan/Documents/IGEO/Updated_Kid_IGEO/\
+stimuli/geo_curve\"\>"], "Output",
+ CellChangeTimes->{
+  3.753526598965405*^9},ExpressionUUID->"0cc55449-3fae-4a25-8646-\
+569d3d23b19f"]
+}, Open  ]],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ArcLine", "[", 
+   RowBox[{"Separation_", ",", " ", "Height_"}], "]"}], ":=", 
+  "\[IndentingNewLine]", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+     "GenerateSphere", ",", " ", "MinAngle", ",", " ", "MaxAngle", ",", " ", 
+      "ArcLength", ",", " ", "LeftPt", ",", " ", "RightPt", ",", " ", 
+      RowBox[{"Radius", " ", "=", "3.5"}], ",", " ", "HeightList", ",", " ", 
+      "UnitHeight", ",", " ", "NewRadius", ",", " ", "XSeparation", ",", " ", 
+      "RotationAngle", ",", " ", "Turn", ",", " ", "XCord", ",", " ", "Perp1",
+       ",", " ", "Perp2", ",", " ", "Temp", ",", " ", "EndAngle", ",", " ", 
+      "CenterPt", ",", " ", "BackPt", ",", " ", "ViewAngle"}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"HeightList", " ", "=", " ", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"-", "1"}], "/", 
+         RowBox[{"Sqrt", "[", "2", "]"}]}], ",", 
+        RowBox[{
+         RowBox[{"-", "1"}], "/", "2"}], ",", " ", 
+        RowBox[{
+         RowBox[{"-", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"Sqrt", "[", "6", "]"}], "-", 
+            RowBox[{"Sqrt", "[", "2", "]"}]}], ")"}]}], "/", "4"}], ",", " ", 
+        
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"Sqrt", "[", "6", "]"}], "-", 
+           RowBox[{"Sqrt", "[", "2", "]"}]}], ")"}], "/", "4"}], ",", " ", 
+        RowBox[{"1", "/", "2"}], ",", " ", 
+        RowBox[{"1", "/", 
+         RowBox[{"Sqrt", "[", "2", "]"}]}]}], "}"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"ViewAngle", " ", "=", " ", 
+      RowBox[{"{", 
+       RowBox[{"0.108", ",", " ", "0.073", ",", " ", "0.038", ",", " ", 
+        RowBox[{"-", "0.038"}], ",", " ", 
+        RowBox[{"-", "0.073"}], ",", " ", 
+        RowBox[{"-", "0.108"}]}], "}"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"UnitHeight", " ", "=", " ", 
+      RowBox[{"HeightList", "[", 
+       RowBox[{"[", "Height", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"XSeparation", " ", "=", " ", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"1", "/", "10"}], ")"}], "*", 
+        RowBox[{"(", 
+         RowBox[{"Separation", " ", "+", " ", "1"}], ")"}]}], ")"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"LeftPt", " ", "=", " ", 
+      RowBox[{"Radius", "*", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "XSeparation"}], ",", 
+         RowBox[{"-", 
+          RowBox[{"Sqrt", "[", 
+           RowBox[{"1", "-", 
+            RowBox[{"XSeparation", "^", "2"}], "-", 
+            RowBox[{"UnitHeight", "^", "2"}]}], "]"}]}], ",", " ", 
+         "UnitHeight"}], "}"}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"RightPt", " ", "=", " ", 
+      RowBox[{"Radius", "*", 
+       RowBox[{"{", 
+        RowBox[{"XSeparation", ",", 
+         RowBox[{"-", 
+          RowBox[{"Sqrt", "[", 
+           RowBox[{"1", "-", 
+            RowBox[{"XSeparation", "^", "2"}], "-", 
+            RowBox[{"UnitHeight", "^", "2"}]}], "]"}]}], ",", " ", 
+         "UnitHeight"}], "}"}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"CenterPt", " ", "=", " ", 
+      RowBox[{"Radius", "*", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", " ", "0", ",", " ", "UnitHeight"}], "}"}]}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Perp1", " ", "=", " ", 
+      RowBox[{"LeftPt", " ", "-", " ", "CenterPt"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Temp", " ", "=", " ", 
+      RowBox[{"RightPt", " ", "-", " ", "CenterPt"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Perp2", " ", "=", " ", 
+      RowBox[{
+       RowBox[{"Norm", "[", "Perp1", "]"}], "*", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"Perp1", " ", "\[Cross]", "Temp"}], ")"}], "\[Cross]", 
+          "Perp1"}], "/", 
+         RowBox[{"Norm", "[", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"Perp1", " ", "\[Cross]", "Temp"}], ")"}], "\[Cross]", 
+           "Perp1"}], "]"}]}], ")"}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"EndAngle", " ", "=", " ", 
+      RowBox[{"ArcCos", "[", 
+       RowBox[{
+        RowBox[{"Perp1", ".", "Temp"}], "/", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"Norm", "[", "Perp1", "]"}], "*", 
+          RowBox[{"Norm", "[", "Temp", "]"}]}], ")"}]}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"RotationAngle", " ", "=", " ", 
+      RowBox[{"ViewAngle", "[", 
+       RowBox[{"[", "Height", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"Turn", " ", "=", " ", 
+      RowBox[{"RotationTransform", "[", 
+       RowBox[{
+        RowBox[{"-", "RotationAngle"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"1", ",", " ", "0", ",", " ", "0"}], "}"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", " ", "0", ",", " ", "0"}], "}"}]}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"GenerateSphere", " ", "=", " ", 
+      RowBox[{"Graphics3D", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"GrayLevel", "[", "1", "]"}], ",", 
+          RowBox[{"Specularity", "[", 
+           RowBox[{"White", ",", "50"}], "]"}], ",", " ", 
+          RowBox[{"Sphere", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"0", ",", " ", "0", ",", "0"}], "}"}], ",", " ", 
+            "Radius"}], "]"}]}], "}"}], ",", " ", "\[IndentingNewLine]", 
+        RowBox[{"ImageSize", "\[Rule]", " ", "650"}], ",", " ", 
+        RowBox[{"Boxed", "\[Rule]", " ", "False"}], ",", " ", 
+        RowBox[{"Background", "\[Rule]", " ", 
+         RowBox[{"Lighter", "[", 
+          RowBox[{"Gray", ",", " ", "0.5"}], "]"}]}], ",", " ", 
+        RowBox[{"ViewPoint", " ", "->", " ", 
+         RowBox[{"{", 
+          RowBox[{"0", ",", " ", 
+           RowBox[{"-", "2"}], ",", " ", "0"}], "}"}]}], ",", " ", 
+        "\[IndentingNewLine]", 
+        RowBox[{"PlotRange", "\[Rule]", " ", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", "4.2"}], ",", " ", "4.2"}], "}"}], ",", " ", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", "6"}], ",", " ", "6"}], "}"}], ",", " ", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", "6"}], ",", " ", "6"}], "}"}]}], "}"}]}], ",", " ", 
+        
+        RowBox[{"Lighting", "\[Rule]", " ", "\"\<Neutral\>\""}]}], "]"}]}], 
+     ";", "\[IndentingNewLine]", 
+     RowBox[{"Show", "[", 
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{"GenerateSphere", ",", "\[IndentingNewLine]", 
+        RowBox[{"Graphics3D", "[", 
+         RowBox[{"{", 
+          RowBox[{"Purple", ",", " ", 
+           RowBox[{"Rotate", "[", 
+            RowBox[{
+             RowBox[{"Sphere", "[", 
+              RowBox[{"LeftPt", ",", " ", "0.06"}], "]"}], ",", " ", 
+             "RotationAngle", ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "1"}], ",", " ", "0", ",", " ", "0"}], "}"}]}], 
+            "]"}]}], "}"}], "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"Graphics3D", "[", 
+         RowBox[{"{", 
+          RowBox[{"Orange", ",", " ", 
+           RowBox[{"Rotate", "[", 
+            RowBox[{
+             RowBox[{"Sphere", "[", 
+              RowBox[{"RightPt", ",", "0.06"}], "]"}], ",", "RotationAngle", 
+             ",", " ", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "1"}], ",", " ", "0", ",", " ", "0"}], "}"}]}], 
+            "]"}]}], "}"}], "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"ParametricPlot3D", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"Turn", "[", 
+            RowBox[{"{", 
+             RowBox[{"CenterPt", " ", "+", " ", 
+              RowBox[{"Perp1", "*", 
+               RowBox[{"Cos", "[", "u", "]"}]}], " ", "+", " ", 
+              RowBox[{"Perp2", "*", 
+               RowBox[{"Sin", "[", "u", "]"}]}]}], "}"}], "]"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"u", ",", " ", "0", ",", "EndAngle"}], "}"}], ",", " ", 
+          RowBox[{"PlotStyle", "\[Rule]", " ", 
+           RowBox[{"{", 
+            RowBox[{"Black", ",", 
+             RowBox[{"Thickness", "[", "0.0055", "]"}]}], "}"}]}]}], "]"}]}], 
+       "\[IndentingNewLine]", "}"}], "]"}]}]}], "\[IndentingNewLine]", 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "SetDirectory", "[", 
+   "\"\</Users/matthewjordan/Documents/IGEO/Updated_Kid_IGEO/stimuli/arc_line/\
+\>\"", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Do", "[", 
+   RowBox[{
+    RowBox[{"Export", "[", 
+     RowBox[{
+      RowBox[{"\"\<ArcLine_Sphere_Sep\>\"", " ", "<>", " ", 
+       RowBox[{"ToString", "[", "i", "]"}], " ", "<>", " ", "\"\<_Ht\>\"", 
+       " ", "<>", " ", 
+       RowBox[{"ToString", "[", "j", "]"}], " ", "<>", " ", "\"\<.x3d\>\""}], 
+      ",", " ", 
+      RowBox[{"ArcLine", "[", 
+       RowBox[{"i", ",", " ", "j"}], "]"}]}], "]"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"i", ",", " ", "1", ",", " ", "5"}], "}"}], ",", " ", 
+    RowBox[{"{", 
+     RowBox[{"j", ",", " ", "1", ",", " ", "6"}], "}"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Do", "[", 
+   RowBox[{
+    RowBox[{"Export", "[", 
+     RowBox[{
+      RowBox[{"\"\<ArcLine_Sphere_Sep\>\"", " ", "<>", " ", 
+       RowBox[{"ToString", "[", "i", "]"}], " ", "<>", " ", "\"\<_Ht\>\"", 
+       " ", "<>", " ", 
+       RowBox[{"ToString", "[", "j", "]"}], " ", "<>", " ", "\"\<.jpg\>\""}], 
+      ",", " ", 
+      RowBox[{"ArcLine", "[", 
+       RowBox[{"i", ",", " ", "j"}], "]"}], ",", " ", 
+      RowBox[{"ImageResolution", "\[Rule]", " ", "350"}]}], "]"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"i", ",", " ", "1", ",", " ", "5"}], "}"}], ",", " ", 
+    RowBox[{"{", 
+     RowBox[{"j", ",", " ", "1", ",", " ", "6"}], "}"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.7524165219930058`*^9, 3.752416789983591*^9}, {
+   3.752416845443071*^9, 3.7524168542640743`*^9}, {3.752416885895484*^9, 
+   3.75241734353141*^9}, {3.752417535392765*^9, 3.752417567239107*^9}, {
+   3.752417824279104*^9, 3.752418076968948*^9}, {3.752418166620874*^9, 
+   3.752418289667045*^9}, {3.7525343873230963`*^9, 3.752534407128396*^9}, {
+   3.7535245006253633`*^9, 3.7535245030098877`*^9}, {3.7535248492366047`*^9, 
+   3.753524849556489*^9}, {3.75352506021808*^9, 3.7535250606416063`*^9}, 
+   3.753525699407757*^9, {3.753526228527246*^9, 3.753526311349453*^9}, {
+   3.753526363785614*^9, 3.7535263652467337`*^9}, {3.7535265147397747`*^9, 
+   3.7535265176766863`*^9}, {3.753527069267331*^9, 3.75352709550023*^9}},
+ EmphasizeSyntaxErrors->
+  True,ExpressionUUID->"822afbef-cdcc-4543-b191-a59b5c4c8a95"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{"ArcCurve", ":", " ", 
+    RowBox[{"We", " ", 
+     RowBox[{"don", "'"}], "t", " ", "use", " ", 
+     RowBox[{"these", "!"}], " ", "We", " ", "flip", " ", "the", " ", 
+     "GeoCurves"}]}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"ArcCurve", "[", 
+     RowBox[{"Separation_", ",", " ", "Height_", ",", " ", "x_"}], "]"}], ":=",
+     "\[IndentingNewLine]", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+       "GenerateSphere", ",", " ", "MinAngle", ",", " ", "MaxAngle", ",", " ",
+         "ArcLength", ",", " ", "LeftPt", ",", " ", "RightPt", ",", " ", 
+        RowBox[{"Radius", " ", "=", "3.5"}], ",", " ", "HeightList", ",", " ",
+         "UnitHeight", ",", " ", "NewRadius", ",", " ", "XSeparation", ",", 
+        " ", "RotationAngle", ",", " ", "Turn", ",", " ", "XCord", ",", " ", 
+        "Perp1", ",", " ", "Perp2", ",", " ", "Temp", ",", " ", "EndAngle", 
+        ",", " ", "ViewAngle", ",", " ", "CenterPt", ",", " ", "BackPt", ",", 
+        " ", "PlaneConstant", ",", " ", "Normal", ",", " ", "t", ",", " ", 
+        "BackPtList"}], "}"}], ",", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"HeightList", " ", "=", " ", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"-", "1"}], "/", 
+           RowBox[{"Sqrt", "[", "2", "]"}]}], ",", 
+          RowBox[{
+           RowBox[{"-", "1"}], "/", "2"}], ",", " ", 
+          RowBox[{"1", "/", "2"}], ",", " ", 
+          RowBox[{"1", "/", 
+           RowBox[{"Sqrt", "[", "2", "]"}]}]}], "}"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"ViewAngle", " ", "=", " ", 
+        RowBox[{"{", 
+         RowBox[{"0.108", ",", " ", "0.073", ",", " ", 
+          RowBox[{"-", "0.073"}], ",", " ", 
+          RowBox[{"-", "0.108"}]}], "}"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"UnitHeight", " ", "=", " ", 
+        RowBox[{"HeightList", "[", 
+         RowBox[{"[", "Height", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"XSeparation", " ", "=", " ", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"1", "/", "10"}], ")"}], "*", 
+          RowBox[{"(", 
+           RowBox[{"Separation", " ", "+", " ", "1"}], ")"}]}], ")"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LeftPt", " ", "=", " ", 
+        RowBox[{"Radius", "*", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "XSeparation"}], ",", 
+           RowBox[{"-", 
+            RowBox[{"Sqrt", "[", 
+             RowBox[{"1", "-", 
+              RowBox[{"XSeparation", "^", "2"}], "-", 
+              RowBox[{"UnitHeight", "^", "2"}]}], "]"}]}], ",", " ", 
+           "UnitHeight"}], "}"}]}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"RightPt", " ", "=", " ", 
+        RowBox[{"Radius", "*", 
+         RowBox[{"{", 
+          RowBox[{"XSeparation", ",", 
+           RowBox[{"-", 
+            RowBox[{"Sqrt", "[", 
+             RowBox[{"1", "-", 
+              RowBox[{"XSeparation", "^", "2"}], "-", 
+              RowBox[{"UnitHeight", "^", "2"}]}], "]"}]}], ",", " ", 
+           "UnitHeight"}], "}"}]}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"t", " ", "=", " ", 
+        RowBox[{
+         RowBox[{"BackPtList", "[", 
+          RowBox[{"[", "Separation", "]"}], "]"}], "[", 
+         RowBox[{"[", "Height", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"BackPt", " ", "=", " ", 
+        RowBox[{"Radius", "*", 
+         RowBox[{"{", 
+          RowBox[{"0", ",", " ", 
+           RowBox[{"Cos", "[", "t", "]"}], ",", " ", 
+           RowBox[{"Sin", "[", "t", "]"}]}], "}"}]}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Normal", " ", "=", " ", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"LeftPt", "-", "BackPt"}], ")"}], "\[Cross]", 
+          RowBox[{"(", 
+           RowBox[{"RightPt", "-", "BackPt"}], ")"}]}], "/", 
+         RowBox[{"Norm", "[", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"LeftPt", "-", "BackPt"}], ")"}], "\[Cross]", 
+           RowBox[{"(", 
+            RowBox[{"RightPt", "-", "BackPt"}], ")"}]}], "]"}]}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"PlaneConstant", " ", "=", " ", 
+        RowBox[{"LeftPt", ".", "Normal"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"CenterPt", " ", "=", " ", 
+        RowBox[{"(", 
+         RowBox[{"PlaneConstant", "*", "Normal"}], ")"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Perp1", " ", "=", " ", 
+        RowBox[{"LeftPt", "-", " ", "CenterPt"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Temp", " ", "=", " ", 
+        RowBox[{"RightPt", " ", "-", " ", "CenterPt"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Perp2", " ", "=", " ", 
+        RowBox[{
+         RowBox[{"Norm", "[", "Perp1", "]"}], "*", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"Perp1", " ", "\[Cross]", "Temp"}], ")"}], "\[Cross]", 
+            "Perp1"}], "/", 
+           RowBox[{"Norm", "[", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{"Perp1", " ", "\[Cross]", "Temp"}], ")"}], "\[Cross]", 
+             "Perp1"}], "]"}]}], ")"}]}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"EndAngle", " ", "=", " ", 
+        RowBox[{"ArcCos", "[", 
+         RowBox[{
+          RowBox[{"Perp1", ".", "Temp"}], "/", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"Norm", "[", "Perp1", "]"}], "*", 
+            RowBox[{"Norm", "[", "Temp", "]"}]}], ")"}]}], "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"RotationAngle", " ", "=", " ", 
+        RowBox[{"ViewAngle", "[", 
+         RowBox[{"[", "Height", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"Turn", " ", "=", " ", 
+        RowBox[{"RotationTransform", "[", 
+         RowBox[{
+          RowBox[{"-", "RotationAngle"}], ",", " ", 
+          RowBox[{"{", 
+           RowBox[{"1", ",", " ", "0", ",", " ", "0"}], "}"}], ",", " ", 
+          RowBox[{"{", 
+           RowBox[{"0", ",", " ", "0", ",", " ", "0"}], "}"}]}], "]"}]}], ";",
+        "\[IndentingNewLine]", 
+       RowBox[{"GenerateSphere", " ", "=", " ", 
+        RowBox[{"Graphics3D", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"GrayLevel", "[", "1", "]"}], ",", 
+            RowBox[{"Specularity", "[", 
+             RowBox[{"White", ",", "50"}], "]"}], ",", 
+            RowBox[{"Opacity", "[", "1", "]"}], ",", " ", 
+            RowBox[{"Sphere", "[", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{"0", ",", " ", "0", ",", "0"}], "}"}], ",", " ", 
+              "Radius"}], "]"}]}], "}"}], ",", " ", "\[IndentingNewLine]", 
+          RowBox[{"ImageSize", "\[Rule]", " ", "650"}], ",", " ", 
+          RowBox[{"Boxed", "\[Rule]", " ", "False"}], ",", " ", 
+          RowBox[{"Background", "\[Rule]", " ", 
+           RowBox[{"Lighter", "[", 
+            RowBox[{"Gray", ",", " ", "0.5"}], "]"}]}], ",", " ", 
+          RowBox[{"ViewPoint", " ", "->", " ", 
+           RowBox[{"{", 
+            RowBox[{"0", ",", " ", 
+             RowBox[{"-", "2"}], ",", " ", "0"}], "}"}]}], ",", " ", 
+          "\[IndentingNewLine]", 
+          RowBox[{"PlotRange", "\[Rule]", " ", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "4.2"}], ",", " ", "4.2"}], "}"}], ",", " ", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "6"}], ",", " ", "6"}], "}"}], ",", " ", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "6"}], ",", " ", "6"}], "}"}]}], "}"}]}], ",", 
+          " ", 
+          RowBox[{"Lighting", "\[Rule]", " ", "\"\<Neutral\>\""}]}], "]"}]}], 
+       ";", "\[IndentingNewLine]", 
+       RowBox[{"Show", "[", 
+        RowBox[{"{", "\[IndentingNewLine]", 
+         RowBox[{"GenerateSphere", ",", "\[IndentingNewLine]", 
+          RowBox[{"Graphics3D", "[", 
+           RowBox[{"{", 
+            RowBox[{"Purple", ",", " ", 
+             RowBox[{"Rotate", "[", 
+              RowBox[{
+               RowBox[{"Sphere", "[", 
+                RowBox[{"LeftPt", ",", " ", "0.06"}], "]"}], ",", " ", 
+               "RotationAngle", ",", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"-", "1"}], ",", " ", "0", ",", " ", "0"}], "}"}]}], 
+              "]"}]}], "}"}], "]"}], ",", "\[IndentingNewLine]", 
+          RowBox[{"Graphics3D", "[", 
+           RowBox[{"{", 
+            RowBox[{"Orange", ",", " ", 
+             RowBox[{"Rotate", "[", 
+              RowBox[{
+               RowBox[{"Sphere", "[", 
+                RowBox[{"RightPt", ",", "0.06"}], "]"}], ",", "RotationAngle",
+                ",", " ", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"-", "1"}], ",", " ", "0", ",", " ", "0"}], "}"}]}], 
+              "]"}]}], "}"}], "]"}], ",", "\[IndentingNewLine]", 
+          RowBox[{"ParametricPlot3D", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"Turn", "[", 
+              RowBox[{"{", 
+               RowBox[{"CenterPt", " ", "+", " ", 
+                RowBox[{"Perp1", "*", 
+                 RowBox[{"Cos", "[", "u", "]"}]}], " ", "+", " ", 
+                RowBox[{"Perp2", "*", 
+                 RowBox[{"Sin", "[", "u", "]"}]}]}], "}"}], "]"}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"u", ",", " ", "0", ",", "EndAngle"}], "}"}], ",", " ", 
+            RowBox[{"PlotStyle", "\[Rule]", " ", 
+             RowBox[{"{", 
+              RowBox[{"Black", ",", 
+               RowBox[{"Thickness", "[", "0.0055", "]"}]}], "}"}]}]}], 
+           "]"}]}], "\[IndentingNewLine]", "}"}], "]"}]}]}], 
+     "\[IndentingNewLine]", "]"}]}], "*)"}]}]], "Input",
+ CellChangeTimes->{{3.7524187525128393`*^9, 3.752418768145342*^9}, {
+   3.752418808798057*^9, 3.752419007415051*^9}, {3.7524191605821657`*^9, 
+   3.752419160875629*^9}, {3.752419283292654*^9, 3.752419304908657*^9}, {
+   3.752419346068946*^9, 3.752419352789029*^9}, {3.752419412621681*^9, 
+   3.752419507240506*^9}, {3.7524195728908*^9, 3.752419706984391*^9}, {
+   3.752419739239953*^9, 3.752419752366046*^9}, {3.752419795124546*^9, 
+   3.752420041738858*^9}, {3.7524395205971127`*^9, 3.752439530586432*^9}, {
+   3.752492964367968*^9, 3.752493037965269*^9}, {3.752493085010004*^9, 
+   3.752493091882256*^9}, {3.7524945797657146`*^9, 3.752494601448299*^9}, {
+   3.7524952925066643`*^9, 3.7524953246813173`*^9}, {3.752496311879105*^9, 
+   3.752496318120673*^9}, 3.752496392401147*^9, {3.752496968233231*^9, 
+   3.7524969726941633`*^9}, {3.752497005753543*^9, 3.7524970063369713`*^9}, {
+   3.752497087519795*^9, 3.7524971100653467`*^9}, {3.752497503115933*^9, 
+   3.752497509372554*^9}, {3.752497840426602*^9, 3.752497940103565*^9}, {
+   3.752498014316833*^9, 3.752498032579728*^9}, {3.752508131122323*^9, 
+   3.752508153221377*^9}, 3.7525082022410727`*^9, {3.7525082837149143`*^9, 
+   3.752508357138894*^9}, {3.752509037873558*^9, 3.752509039428275*^9}, {
+   3.752509854833023*^9, 3.752509889452551*^9}, {3.752534321197515*^9, 
+   3.75253437529714*^9}, {3.752535152863784*^9, 3.7525351774003057`*^9}, {
+   3.7525809442859497`*^9, 3.752581024002687*^9}, {3.752581064667553*^9, 
+   3.752581140121348*^9}, {3.753525065895315*^9, 
+   3.753525099051385*^9}},ExpressionUUID->"088bd84b-9111-478e-bca7-\
+6d0d86ca0a0a"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{"NoLine", " ", "code"}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"NoLine", "[", 
+     RowBox[{"Separation_", ",", " ", "Height_"}], "]"}], ":=", 
+    "\[IndentingNewLine]", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+       "GenerateSphere", ",", " ", "MinAngle", ",", " ", "MaxAngle", ",", " ",
+         "ArcLength", ",", " ", "LeftPt", ",", " ", "RightPt", ",", " ", 
+        RowBox[{"Radius", " ", "=", "3.5"}], ",", " ", "HeightList", ",", " ",
+         "UnitHeight", ",", " ", "NewRadius", ",", " ", "XSeparation", ",", 
+        " ", "RotationAngle", ",", " ", "Turn", ",", " ", "XCord", ",", " ", 
+        "Perp1", ",", " ", "Perp2", ",", " ", "Temp", ",", " ", "EndAngle", 
+        ",", " ", "CenterPt", ",", " ", "BackPt", ",", " ", "ViewAngle"}], 
+       "}"}], ",", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"HeightList", " ", "=", " ", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"-", "1"}], "/", 
+           RowBox[{"Sqrt", "[", "2", "]"}]}], ",", 
+          RowBox[{
+           RowBox[{"-", "1"}], "/", "2"}], ",", " ", 
+          RowBox[{
+           RowBox[{"-", 
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{"Sqrt", "[", "6", "]"}], "-", 
+              RowBox[{"Sqrt", "[", "2", "]"}]}], ")"}]}], "/", "4"}], ",", 
+          " ", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"Sqrt", "[", "6", "]"}], "-", 
+             RowBox[{"Sqrt", "[", "2", "]"}]}], ")"}], "/", "4"}], ",", " ", 
+          RowBox[{"1", "/", "2"}], ",", " ", 
+          RowBox[{"1", "/", 
+           RowBox[{"Sqrt", "[", "2", "]"}]}]}], "}"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"ViewAngle", " ", "=", " ", 
+        RowBox[{"{", 
+         RowBox[{"0.108", ",", " ", "0.073", ",", " ", "0.038", ",", " ", 
+          RowBox[{"-", "0.038"}], ",", " ", 
+          RowBox[{"-", "0.073"}], ",", " ", 
+          RowBox[{"-", "0.108"}]}], "}"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"UnitHeight", " ", "=", " ", 
+        RowBox[{"HeightList", "[", 
+         RowBox[{"[", "Height", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"XSeparation", " ", "=", " ", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"1", "/", "10"}], ")"}], "*", 
+          RowBox[{"(", 
+           RowBox[{"Separation", " ", "+", " ", "1"}], ")"}]}], ")"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"LeftPt", " ", "=", " ", 
+        RowBox[{"Radius", "*", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "XSeparation"}], ",", 
+           RowBox[{"-", 
+            RowBox[{"Sqrt", "[", 
+             RowBox[{"1", "-", 
+              RowBox[{"XSeparation", "^", "2"}], "-", 
+              RowBox[{"UnitHeight", "^", "2"}]}], "]"}]}], ",", " ", 
+           "UnitHeight"}], "}"}]}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"RightPt", " ", "=", " ", 
+        RowBox[{"Radius", "*", 
+         RowBox[{"{", 
+          RowBox[{"XSeparation", ",", 
+           RowBox[{"-", 
+            RowBox[{"Sqrt", "[", 
+             RowBox[{"1", "-", 
+              RowBox[{"XSeparation", "^", "2"}], "-", 
+              RowBox[{"UnitHeight", "^", "2"}]}], "]"}]}], ",", " ", 
+           "UnitHeight"}], "}"}]}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"CenterPt", " ", "=", " ", 
+        RowBox[{"Radius", "*", 
+         RowBox[{"{", 
+          RowBox[{"0", ",", " ", "0", ",", " ", "UnitHeight"}], "}"}]}]}], 
+       ";", "\[IndentingNewLine]", 
+       RowBox[{"Perp1", " ", "=", " ", 
+        RowBox[{"LeftPt", " ", "-", " ", "CenterPt"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Temp", " ", "=", " ", 
+        RowBox[{"RightPt", " ", "-", " ", "CenterPt"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Perp2", " ", "=", " ", 
+        RowBox[{
+         RowBox[{"Norm", "[", "Perp1", "]"}], "*", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"Perp1", " ", "\[Cross]", "Temp"}], ")"}], "\[Cross]", 
+            "Perp1"}], "/", 
+           RowBox[{"Norm", "[", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{"Perp1", " ", "\[Cross]", "Temp"}], ")"}], "\[Cross]", 
+             "Perp1"}], "]"}]}], ")"}]}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"EndAngle", " ", "=", " ", 
+        RowBox[{"ArcCos", "[", 
+         RowBox[{
+          RowBox[{"Perp1", ".", "Temp"}], "/", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"Norm", "[", "Perp1", "]"}], "*", 
+            RowBox[{"Norm", "[", "Temp", "]"}]}], ")"}]}], "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"RotationAngle", " ", "=", " ", 
+        RowBox[{"ViewAngle", "[", 
+         RowBox[{"[", "Height", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"Turn", " ", "=", " ", 
+        RowBox[{"RotationTransform", "[", 
+         RowBox[{
+          RowBox[{"-", "RotationAngle"}], ",", " ", 
+          RowBox[{"{", 
+           RowBox[{"1", ",", " ", "0", ",", " ", "0"}], "}"}], ",", " ", 
+          RowBox[{"{", 
+           RowBox[{"0", ",", " ", "0", ",", " ", "0"}], "}"}]}], "]"}]}], ";",
+        "\[IndentingNewLine]", 
+       RowBox[{"GenerateSphere", " ", "=", " ", 
+        RowBox[{"Graphics3D", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"GrayLevel", "[", "1", "]"}], ",", 
+            RowBox[{"Specularity", "[", 
+             RowBox[{"White", ",", "50"}], "]"}], ",", " ", 
+            RowBox[{"Sphere", "[", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{"0", ",", " ", "0", ",", "0"}], "}"}], ",", " ", 
+              "Radius"}], "]"}]}], "}"}], ",", " ", "\[IndentingNewLine]", 
+          RowBox[{"ImageSize", "\[Rule]", " ", "650"}], ",", " ", 
+          RowBox[{"Boxed", "\[Rule]", " ", "False"}], ",", " ", 
+          RowBox[{"Background", "\[Rule]", " ", 
+           RowBox[{"Lighter", "[", 
+            RowBox[{"Gray", ",", " ", "0.5"}], "]"}]}], ",", " ", 
+          RowBox[{"ViewPoint", " ", "->", " ", 
+           RowBox[{"{", 
+            RowBox[{"0", ",", " ", 
+             RowBox[{"-", "2"}], ",", " ", "0"}], "}"}]}], ",", " ", 
+          "\[IndentingNewLine]", 
+          RowBox[{"PlotRange", "\[Rule]", " ", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "4.2"}], ",", " ", "4.2"}], "}"}], ",", " ", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "6"}], ",", " ", "6"}], "}"}], ",", " ", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "6"}], ",", " ", "6"}], "}"}]}], "}"}]}], ",", 
+          " ", 
+          RowBox[{"Lighting", "\[Rule]", " ", "\"\<Neutral\>\""}]}], "]"}]}], 
+       ";", "\[IndentingNewLine]", 
+       RowBox[{"Show", "[", 
+        RowBox[{"{", "\[IndentingNewLine]", 
+         RowBox[{"GenerateSphere", ",", "\[IndentingNewLine]", 
+          RowBox[{"Graphics3D", "[", 
+           RowBox[{"{", 
+            RowBox[{"Purple", ",", " ", 
+             RowBox[{"Rotate", "[", 
+              RowBox[{
+               RowBox[{"Sphere", "[", 
+                RowBox[{"LeftPt", ",", " ", "0.06"}], "]"}], ",", " ", 
+               "RotationAngle", ",", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"-", "1"}], ",", " ", "0", ",", " ", "0"}], "}"}]}], 
+              "]"}]}], "}"}], "]"}], ",", "\[IndentingNewLine]", 
+          RowBox[{"Graphics3D", "[", 
+           RowBox[{"{", 
+            RowBox[{"Orange", ",", " ", 
+             RowBox[{"Rotate", "[", 
+              RowBox[{
+               RowBox[{"Sphere", "[", 
+                RowBox[{"RightPt", ",", "0.06"}], "]"}], ",", "RotationAngle",
+                ",", " ", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"-", "1"}], ",", " ", "0", ",", " ", "0"}], "}"}]}], 
+              "]"}]}], "}"}], "]"}]}], "\[IndentingNewLine]", 
+         RowBox[{"(*", 
+          RowBox[{"ParametricPlot3D", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"Turn", "[", 
+              RowBox[{"{", 
+               RowBox[{"CenterPt", " ", "+", " ", 
+                RowBox[{"Perp1", "*", 
+                 RowBox[{"Cos", "[", "u", "]"}]}], " ", "+", " ", 
+                RowBox[{"Perp2", "*", 
+                 RowBox[{"Sin", "[", "u", "]"}]}]}], "}"}], "]"}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"u", ",", " ", "0", ",", "EndAngle"}], "}"}], ",", " ", 
+            RowBox[{"PlotStyle", "\[Rule]", " ", 
+             RowBox[{"{", 
+              RowBox[{"Black", ",", 
+               RowBox[{"Thickness", "[", "0.0055", "]"}]}], "}"}]}]}], "]"}], 
+          "*)"}], "\[IndentingNewLine]", "}"}], "]"}]}]}], 
+     "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+    "SetDirectory", "[", 
+     "\"\</Users/matthewjordan/Documents/IGEO/Updated_Kid_IGEO/stimuli/no_\
+line/\>\"", "]"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Do", "[", 
+     RowBox[{
+      RowBox[{"Export", "[", 
+       RowBox[{
+        RowBox[{"\"\<NoLine_Sphere_Sep\>\"", " ", "<>", " ", 
+         RowBox[{"ToString", "[", "i", "]"}], " ", "<>", " ", "\"\<_Ht\>\"", 
+         " ", "<>", " ", 
+         RowBox[{"ToString", "[", "j", "]"}], " ", "<>", " ", 
+         "\"\<.jpg\>\""}], ",", " ", 
+        RowBox[{"NoLine", "[", 
+         RowBox[{"i", ",", " ", "j"}], "]"}], ",", " ", 
+        RowBox[{"ImageResolution", "\[Rule]", " ", "350"}]}], "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", " ", "1", ",", " ", "5"}], "}"}], ",", " ", 
+      RowBox[{"{", 
+       RowBox[{"j", ",", " ", "1", ",", " ", "6"}], "}"}]}], "]"}], ";"}], 
+   "\[IndentingNewLine]"}]}]], "Input",
+ CellChangeTimes->{{3.752534424307929*^9, 3.752534459961422*^9}, {
+   3.752534631220557*^9, 3.752534640254634*^9}, 3.7535251337496443`*^9, 
+   3.75352570574776*^9, 3.753526316480219*^9, {3.753526526238153*^9, 
+   3.7535265572664757`*^9}},ExpressionUUID->"228712d7-5760-48bf-a92e-\
+fd977212fbd5"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{"Transparent", ",", " ", 
+    RowBox[{"for", " ", "creating", " ", "GeoLines"}]}], "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"GeoCurveTransparent", "[", 
+     RowBox[{"Separation_", ",", " ", "Height_"}], "]"}], ":=", 
+    "\[IndentingNewLine]", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+       "GenerateSphere", ",", " ", "MinAngle", ",", " ", "MaxAngle", ",", " ",
+         "ArcLength", ",", " ", "LeftPt", ",", " ", "RightPt", ",", " ", 
+        RowBox[{"Radius", " ", "=", "3.5"}], ",", " ", "HeightList", ",", " ",
+         "UnitHeight", ",", " ", "NewRadius", ",", " ", "XSeparation", ",", 
+        " ", "RotationAngle", ",", " ", "Turn", ",", " ", "XCord", ",", " ", 
+        "Perp1", ",", " ", "Perp2", ",", " ", "Temp", ",", " ", "EndAngle", 
+        ",", " ", "ViewAngle"}], "}"}], ",", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"HeightList", " ", "=", " ", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"-", "1"}], "/", 
+           RowBox[{"Sqrt", "[", "2", "]"}]}], ",", 
+          RowBox[{
+           RowBox[{"-", "1"}], "/", "2"}], ",", " ", 
+          RowBox[{
+           RowBox[{"-", 
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{"Sqrt", "[", "6", "]"}], "-", 
+              RowBox[{"Sqrt", "[", "2", "]"}]}], ")"}]}], "/", "4"}], ",", 
+          " ", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"Sqrt", "[", "6", "]"}], "-", 
+             RowBox[{"Sqrt", "[", "2", "]"}]}], ")"}], "/", "4"}], ",", " ", 
+          RowBox[{"1", "/", "2"}], ",", " ", 
+          RowBox[{"1", "/", 
+           RowBox[{"Sqrt", "[", "2", "]"}]}]}], "}"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"ViewAngle", " ", "=", " ", 
+        RowBox[{"{", 
+         RowBox[{"0.108", ",", " ", "0.073", ",", " ", "0.038", ",", " ", 
+          RowBox[{"-", "0.038"}], ",", " ", 
+          RowBox[{"-", "0.073"}], ",", " ", 
+          RowBox[{"-", "0.108"}]}], "}"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"UnitHeight", " ", "=", " ", 
+        RowBox[{"HeightList", "[", 
+         RowBox[{"[", "Height", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"XSeparation", " ", "=", " ", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"1", "/", "10"}], ")"}], "*", 
+          RowBox[{"(", 
+           RowBox[{"Separation", " ", "+", " ", "1"}], ")"}]}], ")"}]}], ";", 
+       " ", 
+       RowBox[{"(*", " ", 
+        RowBox[{
+        "Goes", " ", "from", " ", "0.2", " ", "to", " ", "0.6", " ", "in", 
+         " ", "equal", " ", "step", " ", "increments"}], " ", "*)"}], 
+       "\[IndentingNewLine]", 
+       RowBox[{"(*", 
+        RowBox[{
+         RowBox[{"NewRadius", " ", "=", " ", 
+          RowBox[{"Radius", "*", 
+           RowBox[{"Sqrt", "[", 
+            RowBox[{"1", "-", 
+             RowBox[{"UnitHeight", "^", "2"}]}], "]"}]}]}], ";"}], "*)"}], 
+       "\[IndentingNewLine]", 
+       RowBox[{"LeftPt", " ", "=", " ", 
+        RowBox[{"Radius", "*", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "XSeparation"}], ",", 
+           RowBox[{"-", 
+            RowBox[{"Sqrt", "[", 
+             RowBox[{"1", "-", 
+              RowBox[{"XSeparation", "^", "2"}], "-", 
+              RowBox[{"UnitHeight", "^", "2"}]}], "]"}]}], ",", " ", 
+           "UnitHeight"}], "}"}]}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"RightPt", " ", "=", " ", 
+        RowBox[{"Radius", "*", 
+         RowBox[{"{", 
+          RowBox[{"XSeparation", ",", 
+           RowBox[{"-", 
+            RowBox[{"Sqrt", "[", 
+             RowBox[{"1", "-", 
+              RowBox[{"XSeparation", "^", "2"}], "-", 
+              RowBox[{"UnitHeight", "^", "2"}]}], "]"}]}], ",", " ", 
+           "UnitHeight"}], "}"}]}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"Perp1", " ", "=", " ", "LeftPt"}], ";", "\[IndentingNewLine]", 
+       RowBox[{"Temp", " ", "=", " ", "RightPt"}], ";", "\[IndentingNewLine]", 
+       RowBox[{"Perp2", " ", "=", " ", 
+        RowBox[{
+         RowBox[{"Norm", "[", "Perp1", "]"}], "*", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"Perp1", " ", "\[Cross]", "Temp"}], ")"}], "\[Cross]", 
+            "Perp1"}], "/", 
+           RowBox[{"Norm", "[", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{"Perp1", " ", "\[Cross]", "Temp"}], ")"}], "\[Cross]", 
+             "Perp1"}], "]"}]}], ")"}]}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"EndAngle", " ", "=", " ", 
+        RowBox[{"ArcCos", "[", 
+         RowBox[{
+          RowBox[{"Perp1", ".", "Temp"}], "/", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"Norm", "[", "Perp1", "]"}], "*", 
+            RowBox[{"Norm", "[", "Temp", "]"}]}], ")"}]}], "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"RotationAngle", " ", "=", " ", 
+        RowBox[{"ViewAngle", "[", 
+         RowBox[{"[", "Height", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"Turn", " ", "=", " ", 
+        RowBox[{"RotationTransform", "[", 
+         RowBox[{
+          RowBox[{"-", "RotationAngle"}], ",", " ", 
+          RowBox[{"{", 
+           RowBox[{"1", ",", " ", "0", ",", " ", "0"}], "}"}], ",", " ", 
+          RowBox[{"{", 
+           RowBox[{"0", ",", " ", "0", ",", " ", "0"}], "}"}]}], "]"}]}], ";",
+        "\[IndentingNewLine]", 
+       RowBox[{"GenerateSphere", " ", "=", " ", 
+        RowBox[{"Graphics3D", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"GrayLevel", "[", "1", "]"}], ",", 
+            RowBox[{"Specularity", "[", 
+             RowBox[{"White", ",", "50"}], "]"}], ",", " ", 
+            RowBox[{"Opacity", "[", "0", "]"}], ",", 
+            RowBox[{"Sphere", "[", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{"0", ",", " ", "0", ",", "0"}], "}"}], ",", " ", 
+              "Radius"}], "]"}]}], "}"}], ",", " ", "\[IndentingNewLine]", 
+          RowBox[{"ImageSize", "\[Rule]", " ", "650"}], ",", " ", 
+          RowBox[{"Boxed", "\[Rule]", " ", "False"}], ",", " ", 
+          RowBox[{"Background", "\[Rule]", " ", 
+           RowBox[{"Lighter", "[", 
+            RowBox[{"Gray", ",", " ", "0.5"}], "]"}]}], ",", " ", 
+          RowBox[{"ViewPoint", " ", "->", " ", 
+           RowBox[{"{", 
+            RowBox[{"0", ",", " ", 
+             RowBox[{"-", "2"}], ",", " ", "0"}], "}"}]}], ",", " ", 
+          "\[IndentingNewLine]", 
+          RowBox[{"PlotRange", "\[Rule]", " ", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "4.2"}], ",", " ", "4.2"}], "}"}], ",", " ", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "6"}], ",", " ", "6"}], "}"}], ",", " ", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "6"}], ",", " ", "6"}], "}"}]}], "}"}]}], ",", 
+          " ", 
+          RowBox[{"Lighting", "\[Rule]", " ", "\"\<Neutral\>\""}]}], "]"}]}], 
+       ";", "\[IndentingNewLine]", 
+       RowBox[{"Show", "[", 
+        RowBox[{"{", "\[IndentingNewLine]", 
+         RowBox[{"GenerateSphere", ",", "\[IndentingNewLine]", 
+          RowBox[{"Graphics3D", "[", 
+           RowBox[{"{", 
+            RowBox[{"Purple", ",", " ", 
+             RowBox[{"Rotate", "[", 
+              RowBox[{
+               RowBox[{"Sphere", "[", 
+                RowBox[{"LeftPt", ",", " ", "0.06"}], "]"}], ",", " ", 
+               "RotationAngle", ",", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"-", "1"}], ",", " ", "0", ",", " ", "0"}], "}"}]}], 
+              "]"}]}], "}"}], "]"}], ",", "\[IndentingNewLine]", 
+          RowBox[{"Graphics3D", "[", 
+           RowBox[{"{", 
+            RowBox[{"Orange", ",", " ", 
+             RowBox[{"Rotate", "[", 
+              RowBox[{
+               RowBox[{"Sphere", "[", 
+                RowBox[{"RightPt", ",", "0.06"}], "]"}], ",", "RotationAngle",
+                ",", " ", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"-", "1"}], ",", " ", "0", ",", " ", "0"}], "}"}]}], 
+              "]"}]}], "}"}], "]"}], ",", "\[IndentingNewLine]", 
+          RowBox[{"ParametricPlot3D", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"Turn", "[", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"Perp1", "*", 
+                 RowBox[{"Cos", "[", "u", "]"}]}], " ", "+", " ", 
+                RowBox[{"Perp2", "*", 
+                 RowBox[{"Sin", "[", "u", "]"}]}]}], "}"}], "]"}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"u", ",", " ", "0", ",", "EndAngle"}], "}"}], ",", " ", 
+            RowBox[{"PlotStyle", "\[Rule]", " ", 
+             RowBox[{"{", 
+              RowBox[{"Black", ",", 
+               RowBox[{"Thickness", "[", "0.0055", "]"}]}], "}"}]}]}], 
+           "]"}]}], "\[IndentingNewLine]", "}"}], "]"}]}]}], 
+     "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+    "SetDirectory", "[", 
+     "\"\</Users/matthewjordan/Documents/IGEO/Updated_Kid_IGEO/stimuli/geo_\
+curve_transparent/\>\"", "]"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Do", "[", 
+     RowBox[{
+      RowBox[{"Export", "[", 
+       RowBox[{
+        RowBox[{"\"\<GeoCurveTransparent_Sphere_Sep\>\"", " ", "<>", " ", 
+         RowBox[{"ToString", "[", "i", "]"}], " ", "<>", " ", "\"\<_Ht\>\"", 
+         " ", "<>", " ", 
+         RowBox[{"ToString", "[", "j", "]"}], " ", "<>", " ", 
+         "\"\<.x3d\>\""}], ",", " ", 
+        RowBox[{"GeoCurve", "[", 
+         RowBox[{"i", ",", " ", "j"}], "]"}]}], "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", " ", "1", ",", " ", "5"}], "}"}], ",", " ", 
+      RowBox[{"{", 
+       RowBox[{"j", ",", " ", "1", ",", " ", "6"}], "}"}]}], "]"}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Do", "[", 
+     RowBox[{
+      RowBox[{"Export", "[", 
+       RowBox[{
+        RowBox[{"\"\<GeoCurveTransparent_Sphere_Sep\>\"", " ", "<>", " ", 
+         RowBox[{"ToString", "[", "i", "]"}], " ", "<>", " ", "\"\<_Ht\>\"", 
+         " ", "<>", " ", 
+         RowBox[{"ToString", "[", "j", "]"}], " ", "<>", " ", 
+         "\"\<.jpg\>\""}], ",", " ", 
+        RowBox[{"GeoCurve", "[", 
+         RowBox[{"i", ",", " ", "j"}], "]"}], ",", " ", 
+        RowBox[{"ImageResolution", "\[Rule]", " ", "350"}]}], "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", " ", "1", ",", " ", "5"}], "}"}], ",", " ", 
+      RowBox[{"{", 
+       RowBox[{"j", ",", " ", "1", ",", " ", "6"}], "}"}]}], "]"}], 
+    ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.753525307661064*^9, 3.753525320145138*^9}, {
+   3.753525593668376*^9, 3.753525602100515*^9}, 3.7535257093140697`*^9, 
+   3.753526319952175*^9, {3.753526573864071*^9, 3.753526587534553*^9}, 
+   3.7535270789728823`*^9},ExpressionUUID->"a30bc277-7910-402f-8a8c-\
+62e377c04ade"],
+
+Cell[BoxData["\<\"/Users/matthewjordan/Documents/IGEO/Updated_Kid_IGEO/\
+stimuli/geo_curve_transparent\"\>"], "Output",
+ CellChangeTimes->{
+  3.753526858598343*^9},ExpressionUUID->"c1b8383a-27a7-458e-b86d-\
+a65999978425"]
+}, Open  ]]
+},
+WindowSize->{1264, 821},
+WindowMargins->{{Automatic, 43}, {Automatic, 0}},
+FrontEndVersion->"11.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (September \
+10, 2017)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 11093, 267, 619, "Input",ExpressionUUID->"3d4830b2-83ee-4840-949a-389cc383e1f8"],
+Cell[11676, 291, 209, 4, 34, "Output",ExpressionUUID->"0cc55449-3fae-4a25-8646-569d3d23b19f"]
+}, Open  ]],
+Cell[11900, 298, 10779, 260, 640, "Input",ExpressionUUID->"822afbef-cdcc-4543-b191-a59b5c4c8a95"],
+Cell[22682, 560, 11493, 255, 661, "Input",ExpressionUUID->"088bd84b-9111-478e-bca7-6d0d86ca0a0a"],
+Cell[34178, 817, 10204, 241, 640, "Input",ExpressionUUID->"228712d7-5760-48bf-a92e-fd977212fbd5"],
+Cell[CellGroupData[{
+Cell[44407, 1062, 11097, 263, 661, "Input",ExpressionUUID->"a30bc277-7910-402f-8a8c-62e377c04ade"],
+Cell[55507, 1327, 221, 4, 34, "Output",ExpressionUUID->"c1b8383a-27a7-458e-b86d-a65999978425"]
+}, Open  ]]
+}
+]
+*)
+
