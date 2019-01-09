@@ -6,11 +6,11 @@ cross <- pracma::cross
 
 radius <-  3.5
 
-height_list <- c(-1/sqrt(2), -1/2, -(sqrt(6)-(sqrt(2)))/4, (sqrt(6)-(sqrt(2)))/4, 1/2, 1/sqrt(2))
-view_angle <- c(0.108, 0.073, 0.038, -0.038, -0.073, -0.108)
+height_list <- c(-1/sqrt(2), -1/2, 1/2, 1/sqrt(2))
+view_angle <- c(0.108, 0.073, -0.073, -0.108)
 
 num_per <- length(height_list)
-
+  
 rot_matrix <- function(height){
   angle <- view_angle[height]
   return(rot.matrix(c(0, 0), theta = -angle, rads = TRUE))
@@ -49,7 +49,7 @@ curve_data <- tibble::tibble(
   ) %>% 
   select(GeoCurve, ArcCurve, everything())
 
-write_csv(curve_data, "../docs/kid_IGEO_curvature.csv")
+write_csv(curve_data, "../docs/kid_IGEO_curvature_40stim.csv")
 
 # ac_curvature <- function(separation, height, t) {
 #   unit_height <- height_list[height]

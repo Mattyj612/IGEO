@@ -10,16 +10,14 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     56712,       1358]
-NotebookOptionsPosition[     55744,       1334]
-NotebookOutlinePosition[     56103,       1350]
-CellTagsIndexPosition[     56060,       1347]
+NotebookDataLength[     56217,       1338]
+NotebookOptionsPosition[     55506,       1320]
+NotebookOutlinePosition[     55865,       1336]
+CellTagsIndexPosition[     55822,       1333]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
 Notebook[{
-
-Cell[CellGroupData[{
 Cell[BoxData[{
  RowBox[{
   RowBox[{"GeoCurve", "[", 
@@ -285,16 +283,13 @@ curve/\>\"", "]"}], ";"}], "\[IndentingNewLine]",
    3.753524844887515*^9}, 3.7535252974496593`*^9, {3.753525607661393*^9, 
    3.7535256343053637`*^9}, {3.753525685761477*^9, 3.7535256883738317`*^9}, {
    3.753526206258793*^9, 3.753526221199703*^9}, {3.753526307384406*^9, 
-   3.753526367430855*^9}, 
-   3.753527097376462*^9},ExpressionUUID->"3d4830b2-83ee-4840-949a-\
+   3.753526367430855*^9}, 3.753527097376462*^9, {3.754068254616507*^9, 
+   3.754068295865923*^9}, {3.754068454976253*^9, 3.754068518423778*^9}, {
+   3.754068598199904*^9, 3.754068621788641*^9}, {3.7540687038155622`*^9, 
+   3.75406870931495*^9}, {3.754068812626182*^9, 3.754068824448354*^9}, {
+   3.754068863971065*^9, 
+   3.754068872700597*^9}},ExpressionUUID->"3d4830b2-83ee-4840-949a-\
 389cc383e1f8"],
-
-Cell[BoxData["\<\"/Users/matthewjordan/Documents/IGEO/Updated_Kid_IGEO/\
-stimuli/geo_curve\"\>"], "Output",
- CellChangeTimes->{
-  3.753526598965405*^9},ExpressionUUID->"0cc55449-3fae-4a25-8646-\
-569d3d23b19f"]
-}, Open  ]],
 
 Cell[BoxData[{
  RowBox[{
@@ -554,9 +549,9 @@ Cell[BoxData[{
    3.753524849556489*^9}, {3.75352506021808*^9, 3.7535250606416063`*^9}, 
    3.753525699407757*^9, {3.753526228527246*^9, 3.753526311349453*^9}, {
    3.753526363785614*^9, 3.7535263652467337`*^9}, {3.7535265147397747`*^9, 
-   3.7535265176766863`*^9}, {3.753527069267331*^9, 3.75352709550023*^9}},
- EmphasizeSyntaxErrors->
-  True,ExpressionUUID->"822afbef-cdcc-4543-b191-a59b5c4c8a95"],
+   3.7535265176766863`*^9}, {3.753527069267331*^9, 
+   3.75352709550023*^9}},ExpressionUUID->"822afbef-cdcc-4543-b191-\
+a59b5c4c8a95"],
 
 Cell[BoxData[
  RowBox[{
@@ -1058,8 +1053,6 @@ line/\>\"", "]"}], ";"}], "\[IndentingNewLine]",
    3.7535265572664757`*^9}},ExpressionUUID->"228712d7-5760-48bf-a92e-\
 fd977212fbd5"],
 
-Cell[CellGroupData[{
-
 Cell[BoxData[
  RowBox[{
   RowBox[{"(*", 
@@ -1323,14 +1316,7 @@ curve_transparent/\>\"", "]"}], ";"}], "\[IndentingNewLine]",
    3.753525593668376*^9, 3.753525602100515*^9}, 3.7535257093140697`*^9, 
    3.753526319952175*^9, {3.753526573864071*^9, 3.753526587534553*^9}, 
    3.7535270789728823`*^9},ExpressionUUID->"a30bc277-7910-402f-8a8c-\
-62e377c04ade"],
-
-Cell[BoxData["\<\"/Users/matthewjordan/Documents/IGEO/Updated_Kid_IGEO/\
-stimuli/geo_curve_transparent\"\>"], "Output",
- CellChangeTimes->{
-  3.753526858598343*^9},ExpressionUUID->"c1b8383a-27a7-458e-b86d-\
-a65999978425"]
-}, Open  ]]
+62e377c04ade"]
 },
 WindowSize->{1264, 821},
 WindowMargins->{{Automatic, 43}, {Automatic, 0}},
@@ -1349,17 +1335,11 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[CellGroupData[{
-Cell[580, 22, 11093, 267, 619, "Input",ExpressionUUID->"3d4830b2-83ee-4840-949a-389cc383e1f8"],
-Cell[11676, 291, 209, 4, 34, "Output",ExpressionUUID->"0cc55449-3fae-4a25-8646-569d3d23b19f"]
-}, Open  ]],
-Cell[11900, 298, 10779, 260, 640, "Input",ExpressionUUID->"822afbef-cdcc-4543-b191-a59b5c4c8a95"],
-Cell[22682, 560, 11493, 255, 661, "Input",ExpressionUUID->"088bd84b-9111-478e-bca7-6d0d86ca0a0a"],
-Cell[34178, 817, 10204, 241, 640, "Input",ExpressionUUID->"228712d7-5760-48bf-a92e-fd977212fbd5"],
-Cell[CellGroupData[{
-Cell[44407, 1062, 11097, 263, 661, "Input",ExpressionUUID->"a30bc277-7910-402f-8a8c-62e377c04ade"],
-Cell[55507, 1327, 221, 4, 34, "Output",ExpressionUUID->"c1b8383a-27a7-458e-b86d-a65999978425"]
-}, Open  ]]
+Cell[558, 20, 11386, 271, 619, "Input",ExpressionUUID->"3d4830b2-83ee-4840-949a-389cc383e1f8"],
+Cell[11947, 293, 10752, 260, 640, "Input",ExpressionUUID->"822afbef-cdcc-4543-b191-a59b5c4c8a95"],
+Cell[22702, 555, 11493, 255, 661, "Input",ExpressionUUID->"088bd84b-9111-478e-bca7-6d0d86ca0a0a"],
+Cell[34198, 812, 10204, 241, 640, "Input",ExpressionUUID->"228712d7-5760-48bf-a92e-fd977212fbd5"],
+Cell[44405, 1055, 11097, 263, 695, "Input",ExpressionUUID->"a30bc277-7910-402f-8a8c-62e377c04ade"]
 }
 ]
 *)
